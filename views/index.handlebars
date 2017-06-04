@@ -1,0 +1,21 @@
+<div class="jumbotron">
+    <div class="container">
+	<h1>Mongo Scraper</h1>
+	<p>Scrape articles from Catster and save them to read later. Write notes about it and save them to look at later too.</p>
+    </div>
+</div>
+
+<div id="noArticles">
+    {{#with noArt}}
+    {{this.message}}
+    {{/with}}
+</div>
+
+<div id="articles" class="panel panel-default">
+    {{#each articles}}
+    <div class="panel-body">
+	{{this.link}}
+    </div>
+    
+    {{/each}}
+</div>
