@@ -11,10 +11,11 @@
     {{/with}}
 </div>
 
-<div id="articles" class="panel panel-default">
+<div class="panel panel-default">
     {{#each articles}}
     <div class="panel-body">
 	{{this.link}}
+	<a class="btn btn-default" href="/saved">Save Article</a>
     </div>
     
     {{/each}}
