@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog">
+<div id="notesModal" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,9 +7,15 @@
       </div>
       <div class="modal-body">
           <div class="panel-body">
-	      <a class="link">{{this.note}}</a>
+	      <p>{{#with noNotes}}
+		  {{this.message}}
+		  {{/with}}
+	      </p>
+	      {{#each doc}}
+	      <h4 class="title">{{this.note}}</h4>
 	      <br/>
 	      <button class="btn btn-default">Delete Note</button>
+	      {{/each}}
 	  </div>
       </div>
       <h3>New Note</h3>

@@ -13,7 +13,7 @@ var Note = require("../models/Note.js");
 //declare variables
 var scraped = false;
 var results = [];
-var dupArt;
+var dupArt, newArt;
 
 // load homepage
 router.get("/", function(req, res) {
@@ -56,29 +56,42 @@ router.get("/scrape", function(req, res) {
 
 // save article to db
 router.post("/saved", function(req, res) {
-    Article.findOne({"title" : req.body.title}, function(results) {
-	if(results !== null) {
-	    dupArt = true;
-	} else {
+    Article.findOne({title : req.body.title}, function(err, found) {
+	console.log("articles found are " + found);
+	if(found === null) {
+	    console.log("results are null");
 	    dupArt = false;
-	};
-	// if not already in db save article to db
-	if(dupArt === false) {
-	    var entry = new Article(result);
-	    entry.save(function(err, doc) {
-		// Log any errors
-		if (err) {
-		console.log(err);
-		}
-		// Or log the doc
-		else {
-		    console.log("new entry: " + doc);
-		}
-	    });
+	    newArt = {
+		"title": req.body.title,
+		"link": req.body.link
+	    };
+	} else {
+	    console.log("results are " + found);
+	    dupArt = true;
 	}
+	saveArt(newArt);
+	res.redirect("/savedArt");
     });
-    res.redirect("/savedArt");
 });
+    // if not already in db save article to db
+function saveArt(article) {
+    if(dupArt === false) {
+	console.log("new article saved: " + newArt);
+	var entry = new Article(article);
+	entry.save(function(err, doc) {
+	    // Log any errors
+	    if (err) {
+		console.log(err);
+	    }
+	    // Or log the doc
+	    else {
+		console.log("new entry: " + doc);
+	    }
+	});
+    } else {
+	console.log("article already saved");
+    }
+}
 
 // load saved articles
 router.get("/savedArt", function(req, res) {
@@ -94,6 +107,20 @@ router.get("/savedArt", function(req, res) {
 
 // create note and save to db
 
+// load notes
+router.get("/notes", function(req, res) {
+    Article.find({title: req.bosy.title}).populate("notes").exec(function(err, doc) {
+	if(err) {
+	    console.log(err);
+
+	} else if(doc === null) {
+	    var noNotes = {noNotes: {message: "No notes for this article yet."}};
+	    res.render("index", noNotes);
+	} else {
+	    res.send(doc);
+	}
+    });
+});
 // delete notes
 
 // delete article
