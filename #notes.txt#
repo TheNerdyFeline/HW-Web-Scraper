@@ -1,0 +1,6 @@
+Article.findOne({"title" : result.title}, function(results) {
+		    if(results !== null) {
+			dupArt = true;
+		    } else {
+			dupArt = false;
+		    };

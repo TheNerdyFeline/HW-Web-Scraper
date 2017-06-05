@@ -1,24 +1,27 @@
 // required packages
 var express = require('express');
 var router  = express.Router();
+
 // Our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
 
+// require models
+var Article = require("../models/Article.js");
+var Note = require("../models/Note.js");
+
 //declare variables
 var scraped = false;
 var results = [];
-var articles;
+var dupArt;
 
 // load homepage
 router.get("/", function(req, res) {
     if(!scraped) {
-	console.log("no articles");
 	var noArt = {noArt: {message: "Looks like you have not scraped any articles yet, click the scrape articles button to load articles."}};
 	res.render("index", noArt);
     } else {
-	articles = {articles: results};
-	console.log(articles);
+	var articles = {artDb: results};
 	res.render("index", articles);
     }
 });
@@ -33,16 +36,15 @@ router.get("/scrape", function(req, res) {
 	    var $ = cheerio.load(html);
 	    // Now, we grab every h2 within an article tag, and do the following:
 	    $("h2").each(function(i, element) {
-		if ($(element).children().attr("href") != "undefined" || $(element).children().text() != '') {
+		if ($(element).children().attr("href") != undefined) {
 		    // Add the text and href of every link to result object
 		    var title = $(this).children().text();
 		    var link = $(this).children().attr("href");
-		    
+
 		    results.push({
 			title: title,
-			link: link
-		    });
-		    // console.log(results);
+			link: link	
+		    });			
 		}
 	    });
 	}
@@ -54,23 +56,41 @@ router.get("/scrape", function(req, res) {
 
 // save article to db
 router.post("/saved", function(req, res) {
-// Using our Article model, create a new entry
-    var entry = new Article(result);
-
-    // Now, save that entry to the db
-    entry.save(function(err, doc) {
-	// Log any errors
-	if (err) {
-	    console.log(err);
+    Article.findOne({"title" : req.body.title}, function(results) {
+	if(results !== null) {
+	    dupArt = true;
+	} else {
+	    dupArt = false;
+	};
+	// if not already in db save article to db
+	if(dupArt === false) {
+	    var entry = new Article(result);
+	    entry.save(function(err, doc) {
+		// Log any errors
+		if (err) {
+		console.log(err);
+		}
+		// Or log the doc
+		else {
+		    console.log("new entry: " + doc);
+		}
+	    });
 	}
-	// Or log the doc
-	else {
-	    console.log(doc);
-	}
-    }); 
+    });
+    res.redirect("/savedArt");
 });
 
 // load saved articles
+router.get("/savedArt", function(req, res) {
+    Article.find({}, function(err, found) {
+	if(err) {
+	    console.log(err);
+	} else {
+	    var articles = {savedArticles: found};
+	    res.render("savedArt", articles);
+	}
+    });
+});
 
 // create note and save to db
 

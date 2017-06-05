@@ -12,9 +12,12 @@
 </div>
 
 <div class="panel panel-default">
-    {{#each articles}}
+    {{#each artDb}}
     <div class="panel-body">
-	{{this.link}}
+	<p class="title">{{this.title}}</p>
+	<br/>
+	<a class="link">{{this.link}}</a>
+	<br/>
 	<a class="btn btn-default" href="/saved">Save Article</a>
     </div>
     
