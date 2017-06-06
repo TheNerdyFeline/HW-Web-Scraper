@@ -4,3 +4,7 @@ Article.findOne({"title" : result.title}, function(results) {
 		    } else {
 			dupArt = false;
 		    };
+
+
+<input id="title" type="hidden" value="{{this.title}}">
+	    <input id="link" type="hidden" value="{{this.link}}">

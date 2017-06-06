@@ -109,7 +109,7 @@ router.get("/savedArt", function(req, res) {
 
 // load notes
 router.get("/notes", function(req, res) {
-    Article.find({title: req.bosy.title}).populate("notes").exec(function(err, doc) {
+    Article.find({title: req.body.title}).populate("notes").exec(function(err, doc) {
 	if(err) {
 	    console.log(err);
 
@@ -124,5 +124,15 @@ router.get("/notes", function(req, res) {
 // delete notes
 
 // delete article
+router.get("/deleteArticle/:title", function(req, res) {
+    Article.remove({title: req.params.title}, function(err, removed) {
+	if(err) {
+	    console.log(err);
+	} else {
+	    //console.log(removed);
+	    res.send(removed);
+	}
+     });
+});
 
 module.exports = router;

@@ -11,10 +11,13 @@
     <div class="panel-body">
 	<p class="title">{{this.title}}</p>
 	<br/>
-	<a class="link">{{this.link}}</a>
+	<a class="link" href="{{this.link}}">{{this.link}}</a>
 	<br/>
-	<button id="artNotes" class="btn btn-default">Article Notes</button>
-	<button class="btn btn-default">Delete Article</button>
+	<form>
+	    <input id="title" type="hidden" value="{{this.title}}">
+	    <button id="artNotes" class="btn btn-default">Article Notes</button>
+	    <button id="deleteArt" class="btn btn-default">Delete Article</button>
+	</form>
     </div>
     
     {{/each}}
