@@ -44,6 +44,7 @@ function seeNotes() {
 
 function addNote() {
     var note = $("#note").val();
+    console.log(note);
     $.post("/addNote", note, function() {
     });
 }

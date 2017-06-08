@@ -113,9 +113,7 @@ router.get("/savedArt", function(req, res) {
 
 // create note and save to db
 router.post("/addNote", function(req, res) {
-    var note = {
-	"note": req.body.note
-    };
+    var note = {"note": "note"};
     console.log(note);
     var newNote = new Note(note);
     newNote.save(function(err, doc) {
