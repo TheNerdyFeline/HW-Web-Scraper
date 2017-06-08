@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 8080;
 
 // Initialize Express
 var app = express();
@@ -26,8 +26,8 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://heroku_wcljfhz0:k8jlpd1q8k47u68n0rqitugac6@ds163721.mlab.com:63721/heroku_wcljfhz0");
-//mongoose.connect("mongodb://localhost/webScraper");
+//mongoose.connect("mongodb://heroku_wcljfhz0:k8jlpd1q8k47u68n0rqitugac6@ds163721.mlab.com:63721/heroku_wcljfhz0");
+mongoose.connect("mongodb://localhost/webScraper");
 var db = mongoose.connection;
 
 // Show any mongoose errors

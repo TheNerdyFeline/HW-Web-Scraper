@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
           <div class="panel-body">
-	      <p>{{#with noNotes}}
+	      <p>{{#with noNotesMess}}
 		  {{this.message}}
 		  {{/with}}
 	      </p>
@@ -21,7 +21,7 @@
       <h3>New Note</h3>
       <textarea id="note" class="form-control" rows="3"></textarea>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Add Note</button>
+        <button id="newNote" type="submit" class="btn btn-primary">Add Note</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

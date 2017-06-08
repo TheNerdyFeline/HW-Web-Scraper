@@ -2,6 +2,7 @@ $(document).on("click", "#scrape", scrapeArt);
 $(document).on("click", "#saveArticle", saveArticle);
 $(document).on("click", "#deleteArt", deleteArticle);
 $(document).on("click", "#artNotes", seeNotes);
+$(document).on("click", "#newNote", addNote)
 
 
 function scrapeArt() {
@@ -35,10 +36,14 @@ function deleteArticle() {
 function seeNotes() {
     var id = $(this).attr("value");
     console.log("show notes modal");
-    $("#notesModal").modal({backdrop: true});
-    $.get("/notes/" + id, function(docs) {
-	console.log("populating notes");
+    $.get("/notes/" + id, function(response) {
+	$("#notesModal").modal({backdrop: true});
+	console.log(response);
     });
 };
 
-
+function addNote() {
+    var note = $("#note").val();
+    $.post("/addNote", note, function() {
+    });
+}

@@ -20,7 +20,7 @@ var dupArt, newArt;
 router.get("/", function(req, res) {
     if(!scraped) {
 	var noArt = {noArt: {message: "Looks like you have not scraped any articles yet, click the scrape articles button to load articles."}};
-	    res.render("index", noArt);
+	res.render("index", noArt);
     } else {
 	var articles = {artDb: results};	
 	res.render("index", articles);
@@ -69,14 +69,15 @@ router.post("/saved", function(req, res) {
 	    };
 	    saveArt(newArt);
 	    res.redirect("/savedArt");
+	    console.log("article saved");
 	} else {
 	    dupArt = false;
 	    console.log("Article already saved.");
 	}
     });
 });
-		   
-    // if not already in db save article to db
+
+// if not already in db save article to db
 function saveArt(article) {
     if(dupArt === false) {
 	console.log("new article saved: ", newArt);
@@ -94,7 +95,7 @@ function saveArt(article) {
     } else {
 	console.log("article already saved");
     }
-}
+};
 
 
 // load saved articles
@@ -103,6 +104,7 @@ router.get("/savedArt", function(req, res) {
 	if(err) {
 	    console.log(err);
 	} else {
+	    console.log("get savedArt running");
 	    var articles = {savedArticles: found};
 	    res.render("savedArt", articles);
 	}
@@ -110,21 +112,37 @@ router.get("/savedArt", function(req, res) {
 });
 
 // create note and save to db
+router.post("/addNote", function(req, res) {
+    var note = {
+	"note": req.body.note
+    };
+    console.log(note);
+    var newNote = new Note(note);
+    newNote.save(function(err, doc) {
+	if(err) {
+	    console.log(err);
+	} else {
+	    console.log("note added");
+	}
+    });
+});
 
 // load notes
 router.get("/notes/:id", function(req, res) {
     console.log("router.get notes ran");
     Article.find({"_id": mongojs.ObjectId(req.params.id)}).populate("notes").exec(function(err, doc) {
+	console.log("notes: ", doc);
 	if(err) {
 	    console.log(err);
 
-	} else if(doc === null) {
+	} else if(doc.notes === undefined) {
 	    console.log("no notes");
-	    var noNotes = {noNotes: {message: "No notes for this article yet."}};
-	    res.render("index", noNotes);
+	    var noNotes = {noNotesMess: {message: "No notes for this article yet."}};
+	    res.send(noNotes);
+	    //res.render("savedArt", noNotes);
 	} else {
 	    console.log("loading notes");
-	    res.send(doc);
+	    res.send(doc.notes);
 	}
     });
 });
@@ -139,8 +157,9 @@ router.get("/deleteArticle/:id", function(req, res) {
 	    res.send(err);
 	} else {
 	    res.redirect('/savedArt');
+	    console.log("article deleted");
 	}
-     });
+    });
 });
 
 module.exports = router;
