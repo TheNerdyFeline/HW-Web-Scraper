@@ -43,8 +43,11 @@ function seeNotes() {
 };
 
 function addNote() {
-    var note = $("#note").val();
-    console.log(note);
-    $.post("/addNote", note, function() {
+    var newNote = {"note": $("#note").val()};
+    //var id = $(this).attr("data-id");
+    $.post("/addNote", newNote, function() {
+	
     });
+    $("#note").val("");
+    console.log("adding note");
 }

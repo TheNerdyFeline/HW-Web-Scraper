@@ -113,21 +113,28 @@ router.get("/savedArt", function(req, res) {
 
 // create note and save to db
 router.post("/addNote", function(req, res) {
-    var note = {"note": "note"};
+    var note = {"note": req.body.note};
     console.log(note);
-    var newNote = new Note(note);
-    newNote.save(function(err, doc) {
+    var entry = new Note(note);
+    entry.save(function(err, doc) {
 	if(err) {
 	    console.log(err);
 	} else {
-	    console.log("note added");
+	    Article.findOneAndUpdate({}, { $push: { "notes": doc._id } }, { new: true }, function(err, newdoc) {
+		// Send any errors to the browser
+		if (err) {
+		    res.send(err);
+		} else {
+		    res.send(newdoc);
+		}
+	    });
+	    console.log("note added", doc);
 	}
     });
 });
 
 // load notes
 router.get("/notes/:id", function(req, res) {
-    console.log("router.get notes ran");
     Article.find({"_id": mongojs.ObjectId(req.params.id)}).populate("notes").exec(function(err, doc) {
 	console.log("notes: ", doc);
 	if(err) {
@@ -139,8 +146,8 @@ router.get("/notes/:id", function(req, res) {
 	    res.send(noNotes);
 	    //res.render("savedArt", noNotes);
 	} else {
-	    console.log("loading notes");
-	    res.send(doc.notes);
+	    console.log("loading notes", doc);
+	    res.send(doc);
 	}
     });
 });
