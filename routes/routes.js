@@ -11,20 +11,20 @@ var Article = require("../models/Article.js");
 var Note = require("../models/Note.js");
 
 //declare variables
+var scraped = false;
+var results = [];
 var dupArt, newArt;
 
 // load homepage
 router.get("/", function(req, res) {
-    Article.find({saved: false}, function(err, docs) {
-	if(err) {
-	    throw err;
-	}
-	//console.log(docs);
-	var articles = {artDb: docs};
+    if(!scraped) {
+	var noArt = {noArt: {message: "Looks like you have not scraped any articles yet, click the scrape articles button to load articles."}};
+	    res.render("index", noArt);
+    } else {
+	var articles = {artDb: results};	
 	res.render("index", articles);
-    });
-    
-});
+    }
+});    
 
 // scrape articles and load to homepage
 router.get("/scrape", function(req, res) {
@@ -39,65 +39,47 @@ router.get("/scrape", function(req, res) {
 	    // Now, we grab every h2 within an article tag, and do the following:
 	    $("h2").each(function(i, element) {
 		if ($(element).children().attr("href") != undefined) {
-		    var result = {};
 		    // Add the text and href of every link to result object
-		    result.title = $(this).children().text();
-		    result.link = $(this).children().attr("href");
-		    Article.findOne({title : result.title}, function(err, found) {
-			console.log("articles found are " + found);
-			if(found === null) {
-			    console.log("results are null");
-			    dupArt = false;
-			    newArt = {
-				"title": result.title,
-				"link": result.link
-			    };
-			    //saveArt(newArt);
-			    var entry = new Article(newArt);
-			    entry.save(function(err, doc) {
-				if (err) {
-				    console.log(err);
-				} else {
-				    // console.log(doc);
-				    data.push(doc);
-				    if (data.length == arrLength){
-					res.json(data);
-				    }
-				}
-			    }); // closes save
-			} else {
-			    console.log("results are " + found);
-			    dupArt = true;
-			}
+		    var title = $(this).children().text();
+		    var link = $(this).children().attr("href");
+
+		    results.push({
+			"title": title,
+			"link": link
 		    });
 		}
 	    });
+	    scraped = true;
+	    console.log("scraped: " , scraped);
+	    res.send("ok");
 	}
     });
 });
 
 // save article to add notes
-router.post("/saved/:title", function(req, res) {
-    console.log("update to save title: " + req.params.title);
-    Article.update({
-	title: req.params.title
-    }, {
-	$set: {
-	    saved: true
-	}
-    }, function(err, saved) {
-	if(err) {
-	    res.send(err);
+router.post("/saved", function(req, res) {
+    Article.findOne({title : req.body.title}, function(err, found) {
+	console.log("articles found are " + found);
+	if(found === null) {
+	    console.log("results are null");
+	    dupArt = false;
+	    newArt = {
+		"title": req.body.title,
+		"link": req.body.link
+	    };
+	    saveArt(newArt);
+	    res.redirect("/savedArt");
 	} else {
-	    console.log("saving article: " + saved);
-	    res.send(saved);
+	    dupArt = false;
+	    console.log("Article already saved.");
 	}
     });
 });
+		   
     // if not already in db save article to db
 function saveArt(article) {
-    //if(dupArt === false) {
-	console.log("new article saved: " + newArt);
+    if(dupArt === false) {
+	console.log("new article saved: ", newArt);
 	var entry = new Article(article);
 	entry.save(function(err, doc) {
 	    // Log any errors
@@ -106,23 +88,23 @@ function saveArt(article) {
 	    }
 	    // Or log the doc
 	    else {
-		console.log("new entry: " + doc);
+		console.log("new entry: " , doc);
 	    }
 	});
-    //} else {
-//	console.log("article already saved");
-    //}
+    } else {
+	console.log("article already saved");
+    }
 }
+
 
 // load saved articles
 router.get("/savedArt", function(req, res) {
-    Article.find({saved: true}, function(err, found) {
+    Article.find({}, function(err, found) {
 	if(err) {
 	    console.log(err);
 	} else {
-	    console.log("found: " + found);
 	    var articles = {savedArticles: found};
-	    console.log("saved articles: " + articles);
+	    console.log("saved articles: " , articles);
 	    res.render("savedArt", articles);
 	}
     });
@@ -148,13 +130,13 @@ router.get("/notes", function(req, res) {
 
 // delete article
 router.get("/deleteArticle/:title", function(req, res) {
+    console.log("remove: ", req.params.title);
     Article.remove({title: req.params.title}, function(err, removed) {
 	if(err) {
 	    console.log(err);
 	    res.send(err);
 	} else {
-	    console.log(removed);
-	    res.send(removed);
+	    res.redirect('/savedArt');
 	}
      });
 });

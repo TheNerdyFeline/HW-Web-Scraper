@@ -6,13 +6,16 @@ $(document).on("click", "#artNotes", seeNotes);
 
 function scrapeArt() {
     $.get("/scrape", function() {
-	//window.location.href = "/";
+	window.location.href = "/";
     });
 };
 
 function saveArticle() {
-    var title = $(this).attr("value");
-    $.post("/saved/" + title, function() {
+    newArt = {
+	"title": $(this).attr("data-id"),
+	"link": $(this).attr("value")
+    }
+    $.post("/saved", newArt, function() {
     });
 };
 
@@ -24,7 +27,7 @@ function deleteArticle() {
 	url: "/deleteArticle/" + title,
 
 	success: function(response) {
-	  this.remove();
+	  //this.remove();
 	}
     });
 };

@@ -8,3 +8,46 @@ Article.findOne({"title" : result.title}, function(results) {
 
 <input id="title" type="hidden" value="{{this.title}}">
 	    <input id="link" type="hidden" value="{{this.link}}">
+
+
+Article.findOne({title : result.title}, function(err, found) {
+			console.log("articles found are " , found);
+			if(found === null) {
+			    console.log("results are null");
+			    dupArt = false;
+			    newArt = {
+				"title": result.title,
+				"link": result.link
+			    };
+			    //saveArt(newArt);
+			    var entry = new Article(newArt);
+			    entry.save(function(err, doc) {
+				if (err) {
+				    console.log(err);
+				} else {
+				    // console.log(doc);
+				    data.push(doc);
+				    if (data.length == arrLength){
+					res.json(data);
+				    }
+				}
+			    }); // closes save
+			} else {
+			    dupArt = true;
+
+updates to saved
+    console.log("update to save title: " , req.params.title);
+    Article.update({
+	title: req.params.title
+    }, {
+	$set: {
+	    saved: true
+	}
+    }, function(err, saved) {
+	if(err) {
+	    res.send(err);
+	} else {
+	    console.log("saving article: " , saved);
+	    res.json(saved);
+	}
+    });
