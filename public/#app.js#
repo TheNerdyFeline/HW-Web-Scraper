@@ -35,6 +35,7 @@ function deleteArticle() {
 function seeNotes() {
     var title = $(this).attr("value");
     console.log("show notes modal");
+    $.get("")
     $("#notesModal").modal({backdrop: true});
 };
 

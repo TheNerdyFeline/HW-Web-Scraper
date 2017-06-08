@@ -1,6 +1,7 @@
 // required packages
 var express = require('express');
 var router  = express.Router();
+var mongojs = require("mongojs");
 
 // Our scraping tools
 var request = require("request");
@@ -113,8 +114,8 @@ router.get("/savedArt", function(req, res) {
 // create note and save to db
 
 // load notes
-router.get("/notes", function(req, res) {
-    Article.find({title: req.body.title}).populate("notes").exec(function(err, doc) {
+router.get("/notes/:id", function(req, res) {
+    Article.find({"_id": mongojs.ObjectId(req.params.id)}).populate("notes").exec(function(err, doc) {
 	if(err) {
 	    console.log(err);
 
@@ -129,9 +130,9 @@ router.get("/notes", function(req, res) {
 // delete notes
 
 // delete article
-router.get("/deleteArticle/:title", function(req, res) {
-    console.log("remove: ", req.params.title);
-    Article.remove({title: req.params.title}, function(err, removed) {
+router.get("/deleteArticle/:id", function(req, res) {
+    console.log("remove: ", req.params.id);
+    Article.remove({"_id": mongojs.ObjectId(req.params.id)}, function(err, removed) {
 	if(err) {
 	    console.log(err);
 	    res.send(err);
