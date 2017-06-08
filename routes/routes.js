@@ -62,7 +62,6 @@ router.post("/saved", function(req, res) {
     Article.findOne({title : req.body.title}, function(err, found) {
 	console.log("articles found are " + found);
 	if(found === null) {
-	    console.log("results are null");
 	    dupArt = false;
 	    newArt = {
 		"title": req.body.title,
@@ -105,7 +104,6 @@ router.get("/savedArt", function(req, res) {
 	    console.log(err);
 	} else {
 	    var articles = {savedArticles: found};
-	    console.log("saved articles: " , articles);
 	    res.render("savedArt", articles);
 	}
     });
@@ -115,14 +113,17 @@ router.get("/savedArt", function(req, res) {
 
 // load notes
 router.get("/notes/:id", function(req, res) {
+    console.log("router.get notes ran");
     Article.find({"_id": mongojs.ObjectId(req.params.id)}).populate("notes").exec(function(err, doc) {
 	if(err) {
 	    console.log(err);
 
 	} else if(doc === null) {
+	    console.log("no notes");
 	    var noNotes = {noNotes: {message: "No notes for this article yet."}};
 	    res.render("index", noNotes);
 	} else {
+	    console.log("loading notes");
 	    res.send(doc);
 	}
     });

@@ -33,9 +33,12 @@ function deleteArticle() {
 };
 
 function seeNotes() {
-    var title = $(this).attr("value");
+    var id = $(this).attr("value");
     console.log("show notes modal");
     $("#notesModal").modal({backdrop: true});
+    $.get("/notes/" + id, function(docs) {
+	console.log("populating notes");
+    });
 };
 
 
