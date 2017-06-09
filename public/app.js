@@ -38,13 +38,13 @@ function seeNotes() {
     var id = $(this).attr("value");
     console.log("show notes modal");
     $.get("/notes/" + id, function(response) {
+	$("#notesModal").modal({backdrop: true});
 	$('.artNote').empty();
 	response[0].notes.forEach(function(el){
 	    console.log(el.note);
 	    $('.artNote').append($('<p></p>').html(el.note));
 	    $(".artNote").append($("<button>").text("Delete Note").addClass('deleteNote').attr("data-id", el._id));
 	    console.log("response recieved");
-	    $("#notesModal").modal({backdrop: true});
 	    console.log(response); 
 	});    
     });

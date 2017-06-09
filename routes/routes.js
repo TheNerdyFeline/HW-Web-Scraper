@@ -142,12 +142,12 @@ router.get("/notes/:id", function(req, res) {
 	if(err) {
 	    console.log(err);
 
-	} else if(doc === undefined) {
+	} /*else if(doc === undefined) {
 	    console.log("no notes");
 	    var noNotes = {noNotesMess: {message: "No notes for this article yet."}};
 	    res.send(noNotes);
 	    //res.render("savedArt", noNotes);
-	} else {
+	} */else {
 	    console.log("loading notes", doc);
 	    res.send(doc);
 	}
