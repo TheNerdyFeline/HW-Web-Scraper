@@ -31,8 +31,10 @@ router.get("/", function(req, res) {
 router.get("/scrape", function(req, res) {
     request("http://www.catster.com/", function(error, response, html) {
 	if(error) {
+	    console.log(error);
 	    res.json(error);
 	} else {
+	    console.log("/scrape is working");
 	    // Then, we load that into cheerio and save it to $ for a shorthand selector
 	    var $ = cheerio.load(html);
 	    var data = [];

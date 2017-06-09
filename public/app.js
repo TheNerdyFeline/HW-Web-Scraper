@@ -7,7 +7,8 @@ $(document).on("click", ".deleteNote", deleteNote);
 
 
 function scrapeArt() {
-    $.get("/scrape", function() {
+    console.log("getting articles");
+    $.get("/scrape", function(response) {
 	window.location.href = "/";
     });
 };
@@ -48,9 +49,9 @@ function seeNotes() {
 	    $(".artNote").append($("<button>").text("Delete Note").addClass('deleteNote').attr("data-id", el._id));
 	    event.target.remove();*/
 	    console.log("response recieved");
-	    console.log(response); 
-	});    
-    //});
+	  //  console.log(response); 
+	//});    
+    });
 };
 
 			 
