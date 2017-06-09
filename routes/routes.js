@@ -29,19 +29,18 @@ router.get("/", function(req, res) {
 
 // scrape articles and load to homepage
 router.get("/scrape", function(req, res) {
-    request("http://www.catster.com/", function(error, response, html) {
+    request("http://www.moderncat.com/", function(error, response, html) {
 	if(error) {
 	    console.log(error);
 	    res.json(error);
 	} else {
-	    console.log("/scrape is working");
 	    // Then, we load that into cheerio and save it to $ for a shorthand selector
 	    var $ = cheerio.load(html);
 	    var data = [];
 	    var arrLength = $(".h2").length;
 	    // Now, we grab every h2 within an article tag, and do the following:
-	    $("h2").each(function(i, element) {
-		if ($(element).children().attr("href") != undefined) {
+	    $("span").each(function(i, element) {
+		if ($(element).children("a").attr("href") != undefined) {
 		    // Add the text and href of every link to result object
 		    var title = $(this).children().text();
 		    var link = $(this).children().attr("href");
@@ -52,6 +51,7 @@ router.get("/scrape", function(req, res) {
 		    });
 		}
 	    });
+	    console.log(results);
 	    scraped = true;
 	    console.log("scraped: " , scraped);
 	    res.send("ok");

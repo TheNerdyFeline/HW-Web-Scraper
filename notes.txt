@@ -77,3 +77,5 @@ updates to saved
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {{/addNote}}
+
+<span class="artNote"></span>
