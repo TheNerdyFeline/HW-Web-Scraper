@@ -148,8 +148,11 @@ router.get("/notes/:id", function(req, res) {
 	    res.send(noNotes);
 	    //res.render("savedArt", noNotes);
 	} */else {
-	    console.log("loading notes", doc);
-	    res.send(doc);
+	    console.log("loading notes", doc[0].notes);
+	    //res.send(doc);
+	    var notes = {artNotes: doc[0].notes};
+	    res.render("savedArt", notes);
+	    //res.render('index');
 	}
     });
 });

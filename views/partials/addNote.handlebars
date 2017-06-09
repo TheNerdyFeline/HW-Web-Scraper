@@ -7,7 +7,10 @@
       </div>
       <div class="modal-body">
           <div class="panel-body">
-	      <span class="artNote"></span>
+	      {{#each artNotes}}
+	      <h4 class="artNote">{{this.note}}</h4>
+	      <button id="deleteNote" type="submit" class="btn btn-primary">Delete Note</button>
+	      {{/each}}
 	  </div>
       </div>
       <h3>New Note</h3>

@@ -1,4 +1,28 @@
-{{> addNote}}
+<div id="notesModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title">Add Note</h4>
+	    </div>
+	    <div class="modal-body">
+		<div class="panel-body">
+		    {{#each artNotes}}
+		    <span class="artNote"></span>
+		    <p>{{this.note}}</p>
+		    <button id="deleteNote" type="submit" class="btn btn-primary">Delete Note</button>
+		    {{/each}}
+		</div>
+	    </div>
+	    <h3>New Note</h3>
+	    <textarea id="note" class="form-control" rows="3"></textarea>
+	    <div class="modal-footer">
+		<button id="newNote" type="submit" class="btn btn-primary">Add Note</button>
+	    </div>
+	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="jumbotron">
     <div class="container">
 	<h1>Mongo Scraper</h1>
@@ -14,7 +38,7 @@
 	<a class="link" href="{{this.link}}">{{this.link}}</a>
 	<br/>
 	<form>
-	    <button type="button" id="artNotes" class="btn btn-default" data-toggle="modal" href="#addNotes" value="{{this.id}}">Article Notes</button>
+	    <button type="button" id="artNotes" class="btn btn-default" data-toggle="modal" href="#notesModal" value="{{this.id}}">Article Notes</button>
 	    <button id="deleteArt" class="btn btn-default" value="{{this.id}}">Delete Article</button>
 	</form>
     </div>

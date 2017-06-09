@@ -37,19 +37,21 @@ function deleteArticle() {
 function seeNotes() {
     var id = $(this).attr("value");
     console.log("show notes modal");
+    console.log('id of article', id);
+    $("#notesModal").modal({backdrop: true});
     $.get("/notes/" + id, function(response) {
-	$("#notesModal").modal({backdrop: true});
-	$('.artNote').empty();
+	//$('body').html(response);
+	/*$('.artNote').empty();
 	response[0].notes.forEach(function(el){
 	    console.log(el.note);
 	    $('.artNote').append($('<p></p>').html(el.note));
 	    $(".artNote").append($("<button>").text("Delete Note").addClass('deleteNote').attr("data-id", el._id));
+	    event.target.remove();*/
 	    console.log("response recieved");
 	    console.log(response); 
 	});    
-    });
+    //});
 };
-
 
 			 
 
