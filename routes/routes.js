@@ -135,12 +135,14 @@ router.post("/addNote", function(req, res) {
 
 // load notes
 router.get("/notes/:id", function(req, res) {
-    Article.find({"_id": mongojs.ObjectId(req.params.id)}).populate("notes").exec(function(err, doc) {
+    Article.find({"_id": mongojs.ObjectId(req.params.id)})
+	.populate("notes")
+	.exec(function(err, doc) {
 	console.log("notes: ", doc);
 	if(err) {
 	    console.log(err);
 
-	} else if(doc.notes === undefined) {
+	} else if(doc === undefined) {
 	    console.log("no notes");
 	    var noNotes = {noNotesMess: {message: "No notes for this article yet."}};
 	    res.send(noNotes);
@@ -152,6 +154,17 @@ router.get("/notes/:id", function(req, res) {
     });
 });
 // delete notes
+router.get("/deleteNote/:id", function(req, res) {
+    Note.remove({"_id": mongojs.ObjectId(req.params.id)}, function(err, removed) {
+	if(err) {
+	    console.log(err);
+	    res.send(err);
+	} else {
+	    res.send('ok');
+	    console.log("note deleted");
+	}
+    });
+});
 
 // delete article
 router.get("/deleteArticle/:id", function(req, res) {
